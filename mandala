@@ -1,0 +1,89 @@
+<?php
+require __DIR__.'/vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+
+$console = new Application('mandala', 'v.1.0');
+$fileSystem = new Filesystem();
+/* db config */
+$console
+  // console comand name
+	->register('database')
+	->addArgument('host', InputArgument::REQUIRED, 'server database')
+	->addArgument('user', InputArgument::REQUIRED, 'username database')
+	->addArgument('password', InputArgument::REQUIRED, 'password database')
+	->addArgument('db_name', InputArgument::REQUIRED, 'nama database')
+	->setCode(function (InputInterface $input, OutputInterface $output) use ($fileSystem){
+		$_host = $input->getArgument('host') ;
+		$_user = $input->getArgument('user') ;
+		$_password = $input->getArgument('password') ;
+		$_db_name = $input->getArgument('db_name') ;
+		$fileSystem->mkdir("conf", 0777);
+		$_db_v  = file_get_contents("src/config/setDB01.php");
+		$_db_v  = str_replace("__HOST__", $_host, $_db_v);
+		$_db_v  = str_replace("__DB_USER__", $_user, $_db_v);
+		$_db_v  = str_replace("__DB_PASS__", $_password, $_db_v);
+		$_db_v  = str_replace("__DB_NAMA__", $_db_name, $_db_v);
+
+		$fp = fopen("conf/setDB01.php", "w+");
+		fwrite($fp, $_db_v);
+		fclose($fp);
+
+		$_db_v  = file_get_contents("src/config/setDB02.php");
+		$_db_v  = str_replace("__HOST__", $_host, $_db_v);
+		$_db_v  = str_replace("__DB_USER__", $_user, $_db_v);
+		$_db_v  = str_replace("__DB_PASS__", $_password, $_db_v);
+		$_db_v  = str_replace("__DB_NAMA__", $_db_name, $_db_v);
+
+		$fp = fopen("conf/setDB02.php", "w+");
+		fwrite($fp, $_db_v);
+		fclose($fp);
+
+		$_db_v  = file_get_contents("src/config/setDB03.php");
+		$_db_v  = str_replace("__HOST__", $_host, $_db_v);
+		$_db_v  = str_replace("__DB_USER__", $_user, $_db_v);
+		$_db_v  = str_replace("__DB_PASS__", $_password, $_db_v);
+		$_db_v  = str_replace("__DB_NAMA__", $_db_name, $_db_v);
+
+		$fp = fopen("conf/setDB03.php", "w+");
+		fwrite($fp, $_db_v);
+		fclose($fp);
+
+		$_db_v  = file_get_contents("src/config/setDBSS.php");
+		$_db_v  = str_replace("__HOST__", $_host, $_db_v);
+		$_db_v  = str_replace("__DB_USER__", $_user, $_db_v);
+		$_db_v  = str_replace("__DB_PASS__", $_password, $_db_v);
+		$_db_v  = str_replace("__DB_NAMA__", $_db_name, $_db_v);
+
+		$fp = fopen("conf/setDBSS.php", "w+");
+		fwrite($fp, $_db_v);
+		fclose($fp);
+
+		$_db_v  = file_get_contents("src/config/console");
+		$_db_v  = str_replace("__HOST__", $_host, $_db_v);
+		$_db_v  = str_replace("__DB_USER__", $_user, $_db_v);
+		$_db_v  = str_replace("__DB_PASS__", $_password, $_db_v);
+		$_db_v  = str_replace("__DB_NAMA__", $_db_name, $_db_v);
+
+		$fp = fopen("console", "w+");
+		fwrite($fp, $_db_v);
+		fclose($fp);
+
+
+		$output->writeln('');
+		$output->writeln([
+				"\n",
+				" Created file           --- <info>config databases </info>",
+				"\n",
+		]);
+
+
+});
+
+$console->run();

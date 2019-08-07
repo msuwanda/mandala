@@ -1,25 +1,34 @@
-
-Change jquery.getScript to function getScript native javascript
 # Mandala framework
 
 framework php with javascript http  
 
 ## Getting Started
 
+
 ### Prerequisites
 
+* [composer](https://getcomposer.org/download/)
+* [web server](https://httpd.apache.org/)
+
+
 ### Installing
+
+install package
+```
+composer install
+```
+setting database
+```
+php mandala database <host> <user> <password> <name>
+```
+install framework
+```
+php console install
+```
 
 ## List code
 
 #### getScript
-
-load file .js in javascript
-
-```
-getScript(param);
-```
-param = path file
 
 #### Defined Document
 
@@ -57,4 +66,3 @@ getInput(param,id,value)
 ## License
 
 ## Acknowledgments
-

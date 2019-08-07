@@ -14,10 +14,10 @@ ProgressBar::setFormatDefinition('custom', " [<fg=yellow>%message:-40s%</>]\n %c
 $console = new Application('mandala', 'v.1.0');
 $fileSystem = new Filesystem();
 /* db config */
-$PHOST	= "localhost";
-$PNAME	= "md-engine";
-$PUSER	= "root";
-$PPASS	= "aldiani";
+$PHOST	= "__HOST__";
+$PNAME	= "__DB_NAMA__";
+$PUSER	= "__DB_USER__";
+$PPASS	= "__DB_PASS__";
 $PLINK 	= new PDO("mysql:host=".$PHOST.";dbname=".$PNAME, $PUSER, $PPASS, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 function Api_key()
 {
@@ -38,7 +38,81 @@ function Api_key()
 $api_key = Api_key() ;
 $console
   // console comand name
-	->register('curd')
+	->register('install')
+	->setCode(function (InputInterface $input, OutputInterface $output) use ($fileSystem,$PLINK){
+
+
+
+		$_query_1 = "DROP TABLE IF EXISTS `tm_aplikasi`" ;
+		$_query_2 = "CREATE TABLE `tm_aplikasi` " ;
+		$_query_2 .= "( `app_id` char(25) NOT NULL," ;
+		$_query_2 .= "`app_index` char(25) NULL DEFAULT NULL," ;
+		$_query_2 .= "`app_nama` varchar(100) NULL DEFAULT NULL," ;
+		$_query_2 .= "`app_exe` varchar(100) NULL DEFAULT NULL," ;
+		$_query_2 .= "`app_icon` varchar(100) NULL DEFAULT NULL," ;
+		$_query_2 .= "`app_menu` int(1) NULL DEFAULT NULL," ;
+		$_query_2 .= "`app_js` int(1) NULL DEFAULT NULL," ;
+		$_query_2 .= "`app_key` varchar(100) NULL DEFAULT NULL," ;
+		$_query_2 .= "`app_desc` varchar(100) NULL DEFAULT NULL," ;
+		$_query_2 .= "`app_class` varchar(100) NULL DEFAULT NULL," ;
+		$_query_2 .= "PRIMARY KEY (`app_id`) USING BTREE," ;
+		$_query_2 .= "UNIQUE INDEX `app_id`(`app_id`) USING BTREE" ;
+		$_query_2 .= ") ENGINE = InnoDB";
+
+		$_query_3 = "DROP TABLE IF EXISTS `tr_access`" ;
+		$_query_4 = "CREATE TABLE `tr_access`  (" ;
+		$_query_4 .= "`app_id` int(11) NULL DEFAULT NULL," ;
+		$_query_4 .= "`grup_id` int(3) NULL DEFAULT NULL" ;
+		$_query_4 .= ") ENGINE = InnoDB" ;
+
+		$_query_6 = "DROP TABLE IF EXISTS `tr_grup` " ;
+		$_query_5 = "CREATE TABLE `tr_grup`  ( " ;
+		$_query_5 .= "`grup_id` char(3) NOT NULL, " ;
+		$_query_5 .= "`grup_nama` varchar(45) NOT NULL, " ;
+		$_query_5 .= "PRIMARY KEY (`grup_id`) USING BTREE " ;
+		$_query_5 .= ") ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci " ;
+
+		try {
+			$sth 	= $PLINK->prepare($_query_1);
+			$sth->execute() ;
+
+			$sth2 	= $PLINK->prepare($_query_2);
+			$sth2->execute() ;
+
+			$sth 	= $PLINK->prepare($_query_3);
+			$sth->execute() ;
+
+			$sth2 	= $PLINK->prepare($_query_4);
+			$sth2->execute() ;
+
+			$sth 	= $PLINK->prepare($_query_6);
+			$sth->execute() ;
+
+			$sth2 	= $PLINK->prepare($_query_5);
+			$sth2->execute() ;
+
+		} catch (\Exception $e) {
+					$output->writeln($e);
+		}
+
+
+
+
+
+
+		$output->writeln([
+				"\n",
+				" Created TABLE           --- <info></info>",
+				"\n",
+		]);
+
+
+});
+
+
+$console
+  // console comand name
+	->register('crud')
 	->addArgument('tabel', InputArgument::REQUIRED, 'Folder aplikasi')
 	->addArgument('folder', InputArgument::REQUIRED, 'app name')
   ->addArgument('kode_name', InputArgument::REQUIRED, 'kode aplikasi tm aplikasi')
@@ -349,6 +423,49 @@ $console
 		$progressBar->setMessage('error ');
 	}
 		$progressBar->finish();
+		$output->writeln('');
+		$output->writeln([
+				"\n",
+				" Created TABLE           --- <info>".$tabel_name."</info>",
+				" Insert tm_aplikasi      --- <info>".$_kode."</info>",
+				" Insert tm_access        --- <info>".$_kode."</info>",
+				" Created view folder     --- <info>/".$base_folder."</info>",
+				" Created Api  folder     --- <info>/".$api_folder."</info>",
+				" Created File view       --- <info>/".$base_folder."/create.php</info>",
+				" Created File view       --- <info>/".$base_folder."/create.js</info>",
+				" Created File api        --- <info>/".$api_folder."/create.php</info>",
+				" Created File view       --- <info>/".$base_folder."/update.php</info>",
+				" Created File view       --- <info>/".$base_folder."/update.js</info>",
+				" Created File api        --- <info>/".$api_folder."/update.php</info>",
+				" Created File view       --- <info>/".$base_folder."/rinci.php</info>",
+				" Created File view       --- <info>/".$base_folder."/rinci.js</info>",
+				" Created File api        --- <info>/".$api_folder."/view_s.php</info>",
+				" Created File api        --- <info>/".$api_folder."/hapus.php</info>",
+				" Created File api        --- <info>/".$api_folder."/view.php</info>",
+				"\n",
+		]);
+
+
+});
+$console
+  // console comand name
+	->register('database')
+	->addArgument('host', InputArgument::REQUIRED, 'server database')
+	->addArgument('user', InputArgument::REQUIRED, 'username database')
+	->addArgument('password', InputArgument::REQUIRED, 'password database')
+	->addArgument('db_name', InputArgument::REQUIRED, 'nama database')
+	->setCode(function (InputInterface $input, OutputInterface $output) use ($fileSystem){
+
+		$_table_v  = file_get_contents("src/config/setDB01.php");
+		$_table_v  = str_replace("__HOST__", $_filter, $_table_v);
+		$_table_v  = str_replace("__DB_NAMA__", $_thead, $_table_v);
+		$_table_v  = str_replace("__DB_USER__", $_kode_t, $_table_v);
+		$_table_v  = str_replace("__DB_PASS__", $_kode_t, $_table_v);
+
+		$fp = fopen("conf/setDB01.php", "w+");
+		fwrite($fp, $_table_v);
+		fclose($fp);
+
 		$output->writeln('');
 		$output->writeln([
 				"\n",
