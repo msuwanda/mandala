@@ -1,0 +1,18 @@
+.app-sidebar .scrollbar-sidebar {
+    overflow: scroll;
+}
+.scrollbar-sidebar::-webkit-scrollbar {
+    width: 0px;
+}
+
+.scrollbar-sidebar::-webkit-scrollbar-track {
+}
+
+.scrollbar-sidebar::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #ccc ;
+}
+.hidden {
+  display: none ;
+}
+​
