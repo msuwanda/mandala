@@ -123,7 +123,7 @@ $console
 
 			if ($i < 6 ) {
 				$_filter .= "\t\t\t\t\t"."<div class=\"col-md-2\">\n" ;
-				$_filter .= "\t\t\t\t\t"."		<div class=\"position-relative row form-group\">\n" ;
+				$_filter .= "\t\t\t\t\t"."		<div class=\"position-relative form-group\">\n" ;
 				$_filter .= "\t\t\t\t\t"."  		<label class=\"\">".$_name_people[1]."</label>\n" ;
 				$_filter .= "\t\t\t\t\t"."        <input type=\"text\" class=\"form-control\" id=\"".$tb[0]."\">\n" ;
 				$_filter .= "\t\t\t\t\t"."   </div>\n" ;
