@@ -41,7 +41,7 @@ if ( isset( $input['iDisplayStart'] ) && $input['iDisplayLength'] != '-1' ) {
 }
 
 
-$sOrder = " ORDER BY app_id DESC";
+$sOrder = " ORDER BY __ROW_ID__ DESC";
 
 
 /**
